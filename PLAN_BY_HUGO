@@ -1,0 +1,56 @@
+Quiz Games:
+
+FlashCards
+Test
+Match
+
+Disclaimer: If the project gets too difficult we can shorten it by gettin rid of a game
+
+
+General:
+	Menu
+	- Different game options
+	- Player required to enter questions and answers every time at the beginning 		or
+	- Player's QandAs can be saved on file for load option (optional)
+	- other game options are only available once questions and answers entered
+	
+	FlashCards 
+	-  flip motion
+	- cool flash card image
+	- side instructions
+		- space to flip and/or something else (mouse click)
+		- Certain key to go back to menu
+	- no repetitions
+	
+	Test
+	- Point system 
+	- Different possible response forms:
+		- typed
+		- multiple choice (type in letter or click on it)
+		- match (draw line or type letter or or somethin else)
+			- has to be different from other match
+	- Score shown at the end 
+		- maybe we could display what they got wrong too 
+	
+	Match 
+	- Point System
+	- Something clever like quizlets function where you drag the answer onto the 	corresponding answer
+	- cool effect for correct answer
+		- highlight green/red 
+		- minimize/disappear 
+	
+General Specifics:
+	- Required:
+		- Window
+		- Menu page
+			- Objects depend on how we want to display the options
+			- could be simple or complex
+		- FlashCard page
+			- Flash Card object
+			- Flippable (could be an event that makes it look like it 										flipped)
+		- Test page
+			- Objects depend on response forms we choose
+		- Match page 
+			- Object bubble that holds the question and answers or 				something
+				- Draggable
+		- Pictures of every object we plan to make
