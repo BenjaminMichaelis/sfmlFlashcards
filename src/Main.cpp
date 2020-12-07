@@ -5,7 +5,7 @@ int main()
 	util::Platform platform;
 
 #if defined(_DEBUG)
-	std::cout << "Hello World and hello Teamates!" << std::endl;
+	std::cout << "Hello World and Teamates!" << std::endl;
 #endif
 
 	sf::RenderWindow window;
