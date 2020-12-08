@@ -23,7 +23,7 @@ private:
 		}
 		else if (charTyped == DELETE)
 		{
-			if (text.str().length > 0)
+			if (text.str().length() > 0)
 			{
 				deleteLast();
 			}
@@ -35,9 +35,9 @@ private:
 	{
 		std::string t = text.str();
 		std::string newT = "";
-		for (int i = 0; i < t.length() - 1; i++)
+		for (long unsigned int i = 0; i < t.length() - 1; i++)
 		{
-			newt += t[i];
+			newT += t[i];
 		}
 		text.str("");
 		text << newT;
@@ -53,7 +53,7 @@ public:
 	TextBox(int size, sf::Color color, bool sel)
 	{
 		textbox.setCharacterSize(size);
-		textbox.setColor(color);
+		textbox.setFillColor(color);
 		isSelected = sel;
 		if(sel)
 		{
@@ -94,9 +94,9 @@ public:
 		{
 			std::string t = text.str();
 			std::string newT = "";
-			for (int i = 0; i < t.length() - 1; i++)
+			for (long unsigned int i = 0; i < t.length() - 1; i++)
 			{
-				newt += t[i];
+				newT += t[i];
 			}
 			textbox.setString(newT);
 		}
@@ -121,11 +121,11 @@ public:
 			{
 				if(hasLimit)
 				{
-					if(text.str().length() <= limit)
+					if((int)text.str().length() <= limit)
 					{
 						inputLogic(charTyped);
 					}
-					else if(text.str().length() <= limit && charTyped == DELETE)
+					else if((int)text.str().length() <= limit && charTyped == DELETE)
 					{
 						deleteLast();
 					}
@@ -137,4 +137,4 @@ public:
 			}
 		}
 	}
-}
+};
