@@ -5,6 +5,7 @@
 #define DELETE 8
 #define ENTER 13
 #define ESCAPE 27
+#define NEWLINE 10
 
 class TextBox
 {
@@ -94,7 +95,7 @@ public:
 		{
 			std::string t = text.str();
 			std::string newT = "";
-			for (long unsigned int i = 0; i < t.length() - 1; i++)
+			for (long unsigned int i = 0; i < t.length(); i++)
 			{
 				newT += t[i];
 			}
@@ -136,5 +137,10 @@ public:
 				}
 			}
 		}
+	}
+
+	void wrap()
+	{
+		inputLogic(NEWLINE);
 	}
 };
