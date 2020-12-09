@@ -2,9 +2,9 @@
 #define PRECOMPILED_HEADER_HPP
 
 #ifndef _DEBUG
-	#ifndef NDEBUG
-		#define NDEBUG
-	#endif
+    #ifndef NDEBUG
+        #define NDEBUG
+    #endif
 #endif // _DEBUG
 
 // SFML
@@ -16,9 +16,9 @@
 
 // Raspberry Pi
 #ifdef SFML_SYSTEM_LINUX
-	#ifdef __arm__
-		#define SFML_SYSTEM_PI
-	#endif
+    #ifdef __arm__
+        #define SFML_SYSTEM_PI
+    #endif
 #endif // SFML SYSTEM_LINUX
 
 // Typical stdafx.h
@@ -50,16 +50,16 @@
 
 // Windows
 #ifdef _WIN32
-	#ifndef UNICODE
-		#define UNICODE
-	#endif
+    #ifndef UNICODE
+        #define UNICODE
+    #endif
 
-	#ifndef _UNICODE
-		#define _UNICODE
-	#endif
+    #ifndef _UNICODE
+        #define _UNICODE
+    #endif
 
-	#define WIN32_LEAN_AND_MEAN
-	#include <windows.h>
+    #define WIN32_LEAN_AND_MEAN
+    #include <windows.h>
 #endif // _WIN32
 
 // Utils
