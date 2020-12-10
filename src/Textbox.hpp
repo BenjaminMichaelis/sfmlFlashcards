@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <sstream>
 
@@ -35,13 +34,14 @@ private:
     void deleteLast()
     {
         std::string t = text.str();
-        std::string newT = "";
-        for (long unsigned int i = 0; i < t.length() - 1; i++)
+        if (!t.empty() && t[t.length() - 1] == '\n')
         {
-            newT += t[i];
+            t.erase(t.length() - 1);
         }
+
+        t.pop_back();
         text.str("");
-        text << newT;
+        text << t;
 
         textbox.setString(text.str());
     }
@@ -56,7 +56,7 @@ public:
         textbox.setCharacterSize(size);
         textbox.setFillColor(color);
         isSelected = sel;
-        if(sel)
+        if (sel)
         {
             textbox.setString("_");
         }
@@ -64,10 +64,9 @@ public:
         {
             textbox.setString("");
         }
-
     }
 
-    void setFont(sf::Font &font)
+    void setFont(sf::Font& font)
     {
         textbox.setFont(font);
     }
@@ -91,7 +90,7 @@ public:
     void setSelected(bool sel)
     {
         isSelected = sel;
-        if(!sel)
+        if (!sel)
         {
             std::string t = text.str();
             std::string newT = "";
@@ -108,25 +107,25 @@ public:
         return text.str();
     }
 
-    void drawTo(sf::RenderWindow &window)
+    void drawTo(sf::RenderWindow& window)
     {
         window.draw(textbox);
     }
 
     void typedOn(sf::Event input)
     {
-        if(isSelected)
+        if (isSelected)
         {
             int charTyped = input.text.unicode;
-            if(charTyped < 128)
+            if (charTyped < 128)
             {
-                if(hasLimit)
+                if (hasLimit)
                 {
-                    if((int)text.str().length() <= limit)
+                    if ((int)text.str().length() <= limit)
                     {
                         inputLogic(charTyped);
                     }
-                    else if((int)text.str().length() <= limit && charTyped == DELETE)
+                    else if (charTyped == DELETE)
                     {
                         deleteLast();
                     }
@@ -139,8 +138,22 @@ public:
         }
     }
 
-    void wrap()
+    void wrap(float p)
     {
-        inputLogic(NEWLINE);
+        if (textbox.findCharacterPos(text.str().length()).x >= p)
+        {
+            std::string t = text.str();
+            size_t space = t.find_last_of(' ');
+
+            if (space != std::string::npos)
+            {
+                t.insert(space + 1, "\n");
+            }
+            else
+                t.push_back('\n');
+            text.str("");
+            text << t;
+            textbox.setString(text.str());
+        }
     }
 };
