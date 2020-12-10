@@ -159,8 +159,8 @@ public:
 
     void clear()
     {
-        text.clear();
-        textbox.setString(text.str());
+        text.str("");
+        textbox.setString("");
         isSelected = false;
     }
 };

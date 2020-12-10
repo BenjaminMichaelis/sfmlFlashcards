@@ -64,6 +64,10 @@ public:
     {
         return Q;
     }
+    bool isEmpty()
+    {
+        return Q.empty() || A.empty();;
+    }
     std::string getA()
     {
         return A;
