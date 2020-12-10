@@ -23,6 +23,28 @@ int main()
 	sf::Font font;
 	font.loadFromFile("src/Font/JetBrainsMono-VariableFont_wght.ttf");
 
+	// directions implementation
+	sf::Text directions, directionsTitle;
+	directionsTitle.setFont(font);
+	directionsTitle.setCharacterSize(16);
+	directionsTitle.setFillColor(sf::Color::White);
+	directionsTitle.setOrigin(sf::Vector2f(directions.getCharacterSize() / 2, directions.getCharacterSize() / 2));
+	directionsTitle.setPosition({ 100, 75 });
+	directionsTitle.setString("Directions:");
+	directions.setFont(font);
+	directions.setCharacterSize(16);
+	directions.setFillColor(sf::Color::White);
+	directions.setOrigin(sf::Vector2f(directions.getCharacterSize() / 2, directions.getCharacterSize() / 2));
+	directions.setPosition({ 93, 100 });
+	directions.setString("You can add and delete flash cards from\n"
+						 "the menu, and you can also choose to play\n"
+						 "a match game. In Match, we'll associate your\n"
+						 "terms and definitions with a flashcard. You\n"
+						 "can click on the question card, drag it, and\n"
+						 "hover it over the corresponding answer card\n"
+						 "for points/time! Press E to go back to menu...\n"
+						 "(that works for every selection from the menu)");
+
 	// add card implementation
 	TextBox tbox1(16, sf::Color::Black, false);
 	tbox1.setFont(font);
@@ -35,7 +57,7 @@ int main()
 	sf::Text t1, t2;
 	t1.setFont(font);
 	t1.setCharacterSize(20);
-	t1.setString("Term");
+	t1.setString("Add Term");
 	sf::RectangleShape rect1(sf::Vector2f(400, 40));
 
 	t2.setFont(font);
@@ -48,6 +70,20 @@ int main()
 
 	rect1.setPosition({ 100, 100 });
 	rect2.setPosition({ 100, 200 });
+
+	//deleteC implementation
+	TextBox tbox3(16, sf::Color::Black, false);
+	tbox3.setFont(font);
+	tbox3.setpos({ 100, 100 });
+
+	sf::Text t3;
+	t3.setFont(font);
+	t3.setCharacterSize(20);
+	t3.setString("Delete Term");
+	t3.setPosition({ 100, 75 });
+
+	sf::RectangleShape rect3(sf::Vector2f(400, 40));
+	rect3.setPosition({ 100, 200 });
 
 	// menu implementation
 	sf::RectangleShape menu(sf::Vector2f(600, 600));
@@ -117,8 +153,8 @@ int main()
 	matchTitle.setPosition(sf::Vector2f(window.getSize().x / 3, 20));
 	note.setPosition(sf::Vector2f(window.getSize().x / 3 - 20, 40));
 
-	bool menuPending = true, addC = false, match = false /*deleteC = false,  dir = false*/; // extra booleans to control the flow of the window relative to its internal relations
-																							// (deleteC and dir not used yet, so they cause errors if not commented out)
+	bool menuPending = true, addC = false, match = false, deleteC = false, dir = false; // extra booleans to control the flow of the window relative to its internal relations
+																						// (deleteC and dir not used yet, so they cause errors if not commented out)
 
 	// 1. need to modify add card so it allows text wrapping, creating a flashcard object, and adding it to map
 	// 2. need to implement delete card functionality
@@ -153,7 +189,7 @@ int main()
 						else if (event.key.code == sf::Keyboard::B) // transition to delete card
 						{
 							menuPending = false;
-							//deleteC = true;
+							deleteC = true;
 							std::cout << "You pressed B!\n";
 						}
 						else if (event.key.code == sf::Keyboard::C) // transition to Match game
@@ -165,13 +201,35 @@ int main()
 						else if (event.key.code == sf::Keyboard::D) // transition to Match game
 						{
 							menuPending = false;
-							//dir = true;
+							dir = true;
 							std::cout << "You pressed D!\n";
 						}
 						else
 						{
 							std::cout << "That is not a valid option, please try again or exit the window to close\n";
 						}
+				}
+			}
+		}
+		// directions implementation
+		if (dir)
+		{
+			while (window.pollEvent(event))
+			{
+				switch (event.type)
+				{
+					default:
+						break;
+					case sf::Event::Closed:
+						window.close();
+						break;
+					case sf::Event::KeyPressed:
+						if (event.key.code == sf::Keyboard::E)
+						{
+							dir = false;
+							menuPending = true;
+						}
+						break;
 				}
 			}
 		}
@@ -197,7 +255,7 @@ int main()
 				tbox2.setSelected(false);
 			}
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		else if (addC && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		{
 			tbox1.setSelected(false);
 			tbox2.setSelected(false);
@@ -220,10 +278,39 @@ int main()
 			}
 		}
 
-		// sf::Event::textEntered can be used to track user input
-		// sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) can be used to track user movement rather than input (WASD)
-		// shape.move(-.01f, 0.0f) moves left for example (second value needs to be negative to move up)
-		// we have to clear the screen regularly
+		// delete card implementation
+		if (deleteC && sf::Mouse::isButtonPressed(sf::Mouse::Left)) // addC added to conditional so this only runs when A is pressed
+		{
+			if (rect3.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+				tbox3.setSelected(true);
+			else
+				tbox3.setSelected(false);
+		}
+		else if (deleteC && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+			tbox3.setSelected(false);
+		if (!menuPending && deleteC)
+		{
+			while (window.pollEvent(event))
+			{
+				switch (event.type)
+				{
+					default:
+						break;
+					case sf::Event::Closed:
+						window.close();
+						break;
+					case sf::Event::TextEntered:
+						tbox3.typedOn(event);
+						break;
+					case sf::Event::KeyPressed:
+						if (event.key.code == sf::Keyboard::E)
+						{
+							deleteC = false;
+							menuPending = true;
+						}
+				}
+			}
+		}
 
 		// match implementation
 		if (match)
@@ -270,7 +357,7 @@ int main()
 		}
 
 		window.clear();
-		if (menuPending)
+		if (menuPending) // display menu
 		{
 			window.draw(menu);
 			window.draw(menuT);
@@ -280,7 +367,23 @@ int main()
 			window.draw(option4);
 		}
 
-		if (!menuPending && addC)
+		if (!menuPending && dir)
+		{
+			window.draw(menu);
+			window.draw(directionsTitle);
+			window.draw(directions);
+		}
+
+		if (!menuPending && deleteC) // display delete card
+		{
+			window.draw(menu);
+			window.draw(rect3);
+			window.draw(t3);
+			window.draw(note);
+			tbox3.drawTo(window);
+		}
+
+		if (!menuPending && addC) // display add card
 		{
 			window.draw(menu); // menu is just a blank black rectangle that fits the window
 			window.draw(rect1);
