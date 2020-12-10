@@ -28,6 +28,20 @@ public:
         this->A = A;
         opacity = true;
     }
+    FlashCard()
+    {
+        cardQ = new sf::RectangleShape(sf::Vector2f(100.0f, 50.0f));
+        cardA = new sf::RectangleShape(sf::Vector2f(100.0f, 50.0f));
+        sf::Vector2f q(50.0f, 25.0f);
+        sf::Vector2f a(550.0f, 25.0f);
+        cardQ->setOrigin(50.0f, 25.0f);
+        cardA->setOrigin(50.0f, 25.0f);
+        this->setCardPos('Q', q);
+        this->setCardPos('A', a);
+        this->setCardColor(sf::Color::White);
+
+        opacity = true;
+    }
     ~FlashCard()
     {}
     sf::RectangleShape getCardQ()
@@ -38,9 +52,21 @@ public:
     {
         return *cardA;
     }
+    void setA(std::string answer)
+    {
+        A = answer;
+    }
+    void setQ(std::string question)
+    {
+        Q = question;
+    }
     std::string getQ()
     {
         return Q;
+    }
+    bool isEmpty()
+    {
+        return Q.empty() || A.empty();;
     }
     std::string getA()
     {

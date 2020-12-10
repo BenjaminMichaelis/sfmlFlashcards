@@ -1,5 +1,6 @@
 #include "FlashCard.hpp"
 #include "Platform/Platform.hpp"
+#include "RedBlackTree.hpp"
 #include "Textbox.hpp"
 #include <iostream>
 #include <stdlib.h>
@@ -18,8 +19,12 @@ int main()
 #if defined(_DEBUG)
     std::cout << "Hello World and Teamates!" << std::endl;
 #endif
+    //redblacktree
+    RedBlackTree<std::string, FlashCard> cardDeck;
 
     sf::RenderWindow window;
+
+    FlashCard temp;
 
     // in Windows at least, this must be called before creating the window
     float screenScalingFactor = platform.getScreenScalingFactor(window.getSystemHandle());
@@ -64,11 +69,11 @@ int main()
                          "for points/time! Press E to go back to menu...\n"
                          "(that works for every selection from the menu)");
 
-	// add card implementation
-	TextBox tbox1(16, sf::Color::Black, false);
-	tbox1.setFont(font);
-	tbox1.setpos({ 100, 100 });
-	tbox1.setLimit(true, 30);
+    // add card implementation
+    TextBox tbox1(16, sf::Color::Black, false);
+    tbox1.setFont(font);
+    tbox1.setpos({ 100, 100 });
+    tbox1.setLimit(true, 30);
 
     TextBox tbox2(16, sf::Color::Black, false);
     tbox2.setFont(font);
@@ -95,25 +100,23 @@ int main()
     t2.setPosition({ 100, 175 });
     cap.setPosition({ 400, 410 });
 
-	rect1.setPosition({ 100, 100 });
-	rect2.setPosition({ 100, 200 });
+    rect1.setPosition({ 100, 100 });
+    rect2.setPosition({ 100, 200 });
     rect1.setOutlineColor(sf::Color::Black);
     rect2.setOutlineColor(sf::Color::Black);
 
-	sf::RectangleShape nextBox(sf::Vector2f(75, 30));
-	sf::RectangleShape doneBox(sf::Vector2f(75, 30));
-    
+    sf::RectangleShape nextBox(sf::Vector2f(75, 30));
+    sf::RectangleShape doneBox(sf::Vector2f(75, 30));
 
-	sf::Text nextText, doneText;
-	nextText.setFont(font);
-	doneText.setFont(font);
-	nextText.setCharacterSize(18);
-	doneText.setCharacterSize(18);
-	nextText.setString("NEXT");
-	doneText.setString("DONE");
-	nextText.setFillColor(sf::Color::Black);
-	doneText.setFillColor(sf::Color::Black);
-   
+    sf::Text nextText, doneText;
+    nextText.setFont(font);
+    doneText.setFont(font);
+    nextText.setCharacterSize(18);
+    doneText.setCharacterSize(18);
+    nextText.setString("NEXT");
+    doneText.setString("DONE");
+    nextText.setFillColor(sf::Color::Black);
+    doneText.setFillColor(sf::Color::Black);
 
     //position the button boxes and texts
     nextBox.setPosition({ 360, 450 });
@@ -127,15 +130,15 @@ int main()
     tbox3.setFont(font);
     tbox3.setpos({ 100, 100 });
 
-	sf::Text t3;
-	t3.setFont(font);
-	t3.setCharacterSize(20);
-	t3.setString("Delete Term");
-	t3.setPosition({ 100, 75 });
+    sf::Text t3;
+    t3.setFont(font);
+    t3.setCharacterSize(20);
+    t3.setString("Delete Term");
+    t3.setPosition({ 100, 75 });
     t3.setFillColor(sf::Color::White);
 
-	sf::RectangleShape rect3(sf::Vector2f(400, 40));
-	rect3.setPosition({ 100, 200 });
+    sf::RectangleShape rect3(sf::Vector2f(400, 40));
+    rect3.setPosition({ 100, 200 });
     rect3.setOutlineColor(sf::Color::Black);
 
     // menu implementation
@@ -185,6 +188,15 @@ int main()
     option4.setPosition(sf::Vector2f(window.getSize().x / 4 - 20, verticalReference * 2 + (35 * 3)));
 
     // match implementation
+    //while(!cardDeck.isEmpty())
+    // {
+    //     Flashcard* newFlashCard = new FlashCard;
+    //     std::map<std::string, TwitterData>::iterator iter;
+    //     for (iter = mapPass.begin(); iter != mapPass.end(); ++iter)
+    //     {
+    //         newFlashCard = iter->second;
+    //     }
+    // }
     FlashCard newFlashCard("What is 2+2?", "4");
     newFlashCard.getCardA().setSize(sf::Vector2f(100.0f, 50.0f));
     newFlashCard.getCardQ().setSize(sf::Vector2f(100.0f, 50.0f));
@@ -217,85 +229,84 @@ int main()
 
     // after these things are improved, we can start thinking about aesthetics, we could also add an exit option in menu
 
-        
-	while (window.isOpen())
-	{
-		sf::Event event;
-		if (menuPending) // i added this conditional because when the event transitions to add flashcard, console prints "That is not a valid option ... ", this way the event wont be polled once menuPending = false
-		{
-			while (window.pollEvent(event))
-			{
-				switch (event.type)
-				{
-					default:
-						//std::cout << "That is not a valid option, please try again or exit the window to close\n";
-						break;
-					case sf::Event::Closed:
-						window.close();
-						break;
-					case sf::Event::KeyPressed:
-						if (event.key.code == sf::Keyboard::A) // transition to add card
-						{
-							menuPending = false;
-							addC = true;
-							std::cout << "You pressed A!\n";
-						}
-						else if (event.key.code == sf::Keyboard::B) // transition to delete card
-						{
-							menuPending = false;
-							deleteC = true;
-							std::cout << "You pressed B!\n";
-						}
-						else if (event.key.code == sf::Keyboard::C) // transition to Match game
-						{
-							menuPending = false;
-							match = true;
-							std::cout << "You pressed C!\n";
-						}
-						else if (event.key.code == sf::Keyboard::D) // transition to Match game
-						{
-							menuPending = false;
-							dir = true;
-							std::cout << "You pressed D!\n";
-						}
-						else
-						{
-							std::cout << "That is not a valid option, please try again or exit the window to close\n";
-						}
-				}
-			}
-		}
-		// directions implementation
-		if (dir)
-		{
-			while (window.pollEvent(event))
-			{
-				switch (event.type)
-				{
-					default:
-						break;
-					case sf::Event::Closed:
-						window.close();
-						break;
-					case sf::Event::KeyPressed:
-						if (event.key.code == sf::Keyboard::E)
-						{
-							dir = false;
-							menuPending = true;
-						}
-						break;
-				}
-			}
-		}
-        
-		// addCard implementation
-		if (addC && sf::Mouse::isButtonPressed(sf::Mouse::Left)) // addC added to conditional so this only runs when A is pressed
-		{
-			if (rect1.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if top box is being clicked
-			{
-				tbox2.setSelected(false);
-				tbox1.setSelected(true);
-			}
+    while (window.isOpen())
+    {
+        sf::Event event;
+        if (menuPending) // i added this conditional because when the event transitions to add flashcard, console prints "That is not a valid option ... ", this way the event wont be polled once menuPending = false
+        {
+            while (window.pollEvent(event))
+            {
+                switch (event.type)
+                {
+                    default:
+                        //std::cout << "That is not a valid option, please try again or exit the window to close\n";
+                        break;
+                    case sf::Event::Closed:
+                        window.close();
+                        break;
+                    case sf::Event::KeyPressed:
+                        if (event.key.code == sf::Keyboard::A) // transition to add card
+                        {
+                            menuPending = false;
+                            addC = true;
+                            std::cout << "You pressed A!\n";
+                        }
+                        else if (event.key.code == sf::Keyboard::B) // transition to delete card
+                        {
+                            menuPending = false;
+                            deleteC = true;
+                            std::cout << "You pressed B!\n";
+                        }
+                        else if (event.key.code == sf::Keyboard::C) // transition to Match game
+                        {
+                            menuPending = false;
+                            match = true;
+                            std::cout << "You pressed C!\n";
+                        }
+                        else if (event.key.code == sf::Keyboard::D) // transition to Match game
+                        {
+                            menuPending = false;
+                            dir = true;
+                            std::cout << "You pressed D!\n";
+                        }
+                        else
+                        {
+                            std::cout << "That is not a valid option, please try again or exit the window to close\n";
+                        }
+                }
+            }
+        }
+        // directions implementation
+        if (dir)
+        {
+            while (window.pollEvent(event))
+            {
+                switch (event.type)
+                {
+                    default:
+                        break;
+                    case sf::Event::Closed:
+                        window.close();
+                        break;
+                    case sf::Event::KeyPressed:
+                        if (event.key.code == sf::Keyboard::E)
+                        {
+                            dir = false;
+                            menuPending = true;
+                        }
+                        break;
+                }
+            }
+        }
+
+        // addCard implementation
+        if (addC && sf::Mouse::isButtonPressed(sf::Mouse::Left)) // addC added to conditional so this only runs when A is pressed
+        {
+            if (rect1.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if top box is being clicked
+            {
+                tbox2.setSelected(false);
+                tbox1.setSelected(true);
+            }
 
             else if (rect2.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if bottom text box is being clicked
             {
@@ -307,6 +318,18 @@ int main()
             {
                 //add current card to map
                 //clear text box objects and what is being drawn for a new card
+                temp.setA(tbox2.getText());
+                temp.setQ(tbox1.getText());
+                if (!temp.isEmpty())
+                {
+                    cardDeck.insert(tbox1.getText(), temp);
+                    tbox1.clear();
+                    tbox2.clear();
+                }
+                else
+                {
+                    std::cout << "Cannot save blank textbox, please fill in both textboxes and try again" << std::endl;
+                }
             }
 
             else if (doneBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if done button is being clicked
@@ -379,7 +402,7 @@ int main()
             }
         }
 
-		// match implementation
+        // match implementation
         if (match)
         {
             while (window.pollEvent(event))
@@ -432,12 +455,12 @@ int main()
             }
         }
 
-		if (match && newFlashCard.checkCollision())
-		{
-			std::cout << "Correct!\n";
-		}
+        if (match && newFlashCard.checkCollision())
+        {
+            std::cout << "Correct!\n";
+        }
 
-		window.clear();
+        window.clear();
         if (menuPending) // display menu
         {
             window.draw(backgroundSp);
@@ -447,8 +470,8 @@ int main()
             window.draw(option3);
             window.draw(option4);
         }
-        
-		if (!menuPending && dir)
+
+        if (!menuPending && dir)
         {
             window.draw(backgroundSp);
             window.draw(directionsTitle);
