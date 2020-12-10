@@ -3,9 +3,9 @@
 template <typename K, typename V>
 class RedBlackTree
 {
-private:
-    std::map<K,V> sut;
 public:
+    std::map<K,V> sut;
+
     RedBlackTree()
     {
 
