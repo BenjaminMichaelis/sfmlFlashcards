@@ -1,4 +1,5 @@
 # SFMLFlashcards / TESTLY
+## Directions
 You can add and delete flash cards from the menu, and you can also choose to play a match game. In Match, we'll associate your terms and definitions with a flashcard. You can click on the question card, drag it, and hover it over the corresponding answer card for points/time! Press E to go back to menu... (that works for every selection from the menu).
 
 ## Prerequisites
