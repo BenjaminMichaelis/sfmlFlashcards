@@ -9,6 +9,7 @@ private:
     sf::RectangleShape* cardA;
     std::string Q;
     std::string A;
+    bool opacity;
 
 public:
     FlashCard(std::string Q, std::string A)
@@ -25,6 +26,7 @@ public:
 
         this->Q = Q;
         this->A = A;
+        opacity = true;
     }
     ~FlashCard()
     {}
@@ -58,11 +60,41 @@ public:
                 break;
         }
     }
+
     void setCardColor(sf::Color c)
     {
         cardQ->setFillColor(c);
         cardA->setFillColor(c);
     }
+
+    void setOpacity(bool o)
+    {
+        if (!o) // if o is false, this is true
+        {
+            cardQ->setFillColor(sf::Color::Transparent);
+            cardA->setFillColor(sf::Color::Transparent);
+            opacity = false;
+        }
+        else if (!opacity && o) // if opacity is already false and o is true
+        {
+            cardQ->setFillColor(sf::Color::White);
+            cardA->setFillColor(sf::Color::White);
+            opacity = true;
+        }
+    }
+
+    void setDefault(sf::Font& font)
+    {
+        sf::Text question, answer;
+        sf::Vector2f q(50.0f, 25.0f);
+        sf::Vector2f a(550.0f, 25.0f);
+        cardQ->setFillColor(sf::Color::White);
+        cardA->setFillColor(sf::Color::White);
+        this->setCardPos('Q', q);
+        this->setCardPos('A', a);
+        setText(question, answer, font);
+    }
+
     bool checkCollision()
     {
         sf::Vector2f halfsize = cardQ->getSize() / 2.0f;

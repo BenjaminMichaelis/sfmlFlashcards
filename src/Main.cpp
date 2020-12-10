@@ -5,6 +5,12 @@
 #include <stdlib.h>
 #include <time.h>
 
+#ifdef _WIN32
+    #include <Windows.h>
+#else
+    #include <unistd.h>
+#endif
+
 int main()
 {
     util::Platform platform;
@@ -22,6 +28,19 @@ int main()
 
     sf::Font font;
     font.loadFromFile("src/Font/JetBrainsMono-VariableFont_wght.ttf");
+
+    // aesthetics (backgrounds, textures, sprites; ideas welcome)
+    sf::Sprite backgroundSp;
+    sf::Texture backgroundTr;
+    if (!backgroundTr.loadFromFile("src/Textures/background.png"))
+        std::cout << "Couldn't load background.png..." << std::endl;
+
+    backgroundTr.setSmooth(true);
+    backgroundTr.setRepeated(false);
+
+    backgroundSp.setOrigin({ static_cast<float>(window.getSize().x / 4), static_cast<float>(window.getSize().y / 4) });
+    backgroundSp.setPosition({ static_cast<float>(window.getSize().x / 6 - 50), static_cast<float>(window.getSize().y / 6) });
+    backgroundSp.setTexture(backgroundTr);
 
     // directions implementation
     sf::Text directions, directionsTitle;
@@ -67,10 +86,13 @@ int main()
 
     t1.setPosition({ 100, 75 });
     t2.setPosition({ 100, 175 });
+    t1.setFillColor(sf::Color::White);
+    t2.setFillColor(sf::Color::White);
 
     rect1.setPosition({ 100, 100 });
     rect2.setPosition({ 100, 200 });
-
+    rect1.setOutlineColor(sf::Color::Black);
+    rect2.setOutlineColor(sf::Color::Black);
     //deleteC implementation
     TextBox tbox3(16, sf::Color::Black, false);
     tbox3.setFont(font);
@@ -81,9 +103,11 @@ int main()
     t3.setCharacterSize(20);
     t3.setString("Delete Term");
     t3.setPosition({ 100, 75 });
+    t3.setFillColor(sf::Color::White);
 
     sf::RectangleShape rect3(sf::Vector2f(400, 40));
     rect3.setPosition({ 100, 200 });
+    rect3.setOutlineColor(sf::Color::Black);
 
     // menu implementation
     sf::RectangleShape menu(sf::Vector2f(600, 600));
@@ -337,6 +361,19 @@ int main()
                                 window.draw(matchTitle);
                                 newFlashCard.draw(window, font);
                                 window.display();
+                                if (newFlashCard.checkCollision())
+                                {
+
+                                    newFlashCard.setCardColor(sf::Color::Green);
+                                    window.clear();
+                                    window.draw(note);
+                                    window.draw(matchTitle);
+                                    newFlashCard.draw(window, font);
+                                    window.display();
+                                    sleep(1);
+                                    event.type = sf::Event::MouseButtonReleased;
+                                    newFlashCard.setOpacity(false);
+                                }
                             }
                         }
                         break;
@@ -345,21 +382,17 @@ int main()
                         {
                             match = false;
                             menuPending = true;
+                            newFlashCard.setDefault(font);
                         }
                         break;
                 }
             }
         }
 
-        if (match && newFlashCard.checkCollision())
-        {
-            std::cout << "Correct!\n";
-        }
-
         window.clear();
         if (menuPending) // display menu
         {
-            window.draw(menu);
+            window.draw(backgroundSp);
             window.draw(menuT);
             window.draw(option1);
             window.draw(option2);
@@ -369,14 +402,14 @@ int main()
 
         if (!menuPending && dir)
         {
-            window.draw(menu);
+            window.draw(backgroundSp);
             window.draw(directionsTitle);
             window.draw(directions);
         }
 
         if (!menuPending && deleteC) // display delete card
         {
-            window.draw(menu);
+            window.draw(backgroundSp);
             window.draw(rect3);
             window.draw(t3);
             window.draw(note);
@@ -385,7 +418,7 @@ int main()
 
         if (!menuPending && addC) // display add card
         {
-            window.draw(menu); // menu is just a blank black rectangle that fits the window
+            window.draw(backgroundSp); // menu is just a blank black rectangle that fits the window
             window.draw(rect1);
             window.draw(rect2);
             window.draw(t1);
