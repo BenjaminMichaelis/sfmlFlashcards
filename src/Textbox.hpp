@@ -156,4 +156,11 @@ public:
             textbox.setString(text.str());
         }
     }
+
+    void clear()
+    {
+        text.clear();
+        textbox.setString(text.str());
+        isSelected = false;
+    }
 };
