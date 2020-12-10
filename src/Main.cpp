@@ -334,9 +334,16 @@ int main()
 
             else if (doneBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if done button is being clicked
             {
-                //add current card to map
-                //clear text boxes
-                //go back to menu
+                temp.setA(tbox2.getText());
+                temp.setQ(tbox1.getText());
+                if (!temp.isEmpty())
+                {
+                    cardDeck.insert(tbox1.getText(), temp);
+                    tbox1.clear();
+                    tbox2.clear();
+                }
+                addC = false;
+                menuPending = true;
             }
 
             else
