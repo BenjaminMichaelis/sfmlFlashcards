@@ -5,12 +5,61 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <vector>
 
 #ifdef _WIN32
 	#include <Windows.h>
 #else
 	#include <unistd.h>
 #endif
+
+void setDefault(RedBlackTree<std::string, FlashCard>& rbt, sf::Font& font);
+void setDefault(RedBlackTree<std::string, FlashCard>& rbt, sf::Font& font)
+{
+	std::map<std::string, FlashCard>::iterator it = rbt.sut.begin();
+	for (; it != rbt.sut.end(); it++)
+		it->second.setDefault(font);
+}
+
+void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text& note, sf::Text& matchTitle, sf::Font& font, sf::Event& event, FlashCard& temp1, FlashCard& temp2, FlashCard& temp3, FlashCard& temp4);
+void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text& note, sf::Text& matchTitle, sf::Font& font, sf::Event& event, FlashCard& temp1, FlashCard& temp2, FlashCard& temp3, FlashCard& temp4)
+{
+	if (flashCard.getCardQ().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+	{
+		while (sf::Mouse::isButtonPressed(sf::Mouse::Left) && event.type != sf::Event::MouseButtonReleased)
+		{
+			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+			sf::Vector2f pos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+			flashCard.setCardPos('Q', pos);
+			window.clear();
+			window.draw(note);
+			window.draw(matchTitle);
+			flashCard.draw(window, font);
+			temp1.draw(window, font);
+			temp2.draw(window, font);
+			temp3.draw(window, font);
+			temp4.draw(window, font);
+			window.display();
+			if (flashCard.checkCollision())
+			{
+
+				flashCard.setCardColor(sf::Color::Green);
+				window.clear();
+				window.draw(note);
+				window.draw(matchTitle);
+				flashCard.draw(window, font);
+				temp1.draw(window, font);
+				temp2.draw(window, font);
+				temp3.draw(window, font);
+				temp4.draw(window, font);
+				window.display();
+				sleep(1);
+				event.type = sf::Event::MouseButtonReleased;
+				flashCard.setOpacity(false);
+			}
+		}
+	}
+}
 
 int main()
 {
@@ -23,8 +72,6 @@ int main()
 	RedBlackTree<std::string, FlashCard> cardDeck;
 
 	sf::RenderWindow window;
-
-	FlashCard temp;
 
 	// in Windows at least, this must be called before creating the window
 	float screenScalingFactor = platform.getScreenScalingFactor(window.getSystemHandle());
@@ -206,13 +253,7 @@ int main()
 	//         newFlashCard = iter->second;
 	//     }
 	// }
-	FlashCard newFlashCard("What is 2+2?", "4");
-	newFlashCard.getCardA().setSize(sf::Vector2f(100.0f, 50.0f));
-	newFlashCard.getCardQ().setSize(sf::Vector2f(100.0f, 50.0f));
-	newFlashCard.getCardA().setOrigin(50.0f, 25.0f);
-	newFlashCard.getCardQ().setOrigin(50.0f, 25.0f);
-	newFlashCard.getCardA().setFillColor(sf::Color::White);
-	newFlashCard.getCardQ().setFillColor(sf::Color::White);
+
 	sf::Text matchTitle, note;
 	matchTitle.setFont(font);
 	note.setFont(font);
@@ -227,9 +268,11 @@ int main()
 	matchTitle.setPosition(sf::Vector2f(window.getSize().x / 3, 20));
 	note.setPosition(sf::Vector2f(window.getSize().x / 3 - 20, 40));
 
-	bool menuPending = true, addC = false, match = false, deleteC = false, dir = false; // extra booleans to control the flow of the window relative to its internal relations
-																						// (deleteC and dir not used yet, so they cause errors if not commented out)
-
+	bool menuPending = true, addC = false, match = false, deleteC = false, dir = false, firstRun = true; // extra booleans to control the flow of the window relative to its internal relations
+																										 // (deleteC and dir not used yet, so they cause errors if not commented out)
+	sf::Vector2f randomQP, randomAP;
+	FlashCard temp1, temp2, temp3, temp4, temp5;
+	std::vector<std::string> questions;
 	// 1. need to modify add card so it allows text wrapping, creating a flashcard object, and adding it to map
 	// 2. need to implement delete card functionality
 	// 3. need to implement match game (# of flashcards used, specify movement relative to mouse click, format of showing correct/incorrect, point/time system)
@@ -327,10 +370,15 @@ int main()
 			{
 				//add current card to map
 				//clear text box objects and what is being drawn for a new card
+				FlashCard temp;
+				temp.setCardSize(sf::Vector2f(100.0f, 50.0f));
+				temp.setCardOrigin({ 50.0f, 25.0f });
 				temp.setA(tbox2.getText());
 				temp.setQ(tbox1.getText());
 				if (!temp.isEmpty())
 				{
+					temp.setDefault(font);
+					questions.push_back(temp.getQ());
 					cardDeck.insert(tbox1.getText(), temp);
 					tbox1.clear();
 					tbox2.clear();
@@ -343,10 +391,17 @@ int main()
 
 			else if (doneBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if done button is being clicked
 			{
+				FlashCard temp;
+				temp.setCardSize(sf::Vector2f(100.0f, 50.0f));
+				temp.setCardOrigin({ 50.0f, 25.0f });
 				temp.setA(tbox2.getText());
 				temp.setQ(tbox1.getText());
 				if (!temp.isEmpty())
 				{
+					temp.setDefault(font);
+					temp.setCardPos('Q', randomQP);
+					temp.setCardPos('A', randomAP);
+					questions.push_back(temp.getQ());
 					cardDeck.insert(tbox1.getText(), temp);
 					tbox1.clear();
 					tbox2.clear();
@@ -440,49 +495,50 @@ int main()
 						window.close();
 						break;
 					case sf::Event::MouseButtonPressed:
-						if (newFlashCard.getCardQ().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
-						{
-							while (sf::Mouse::isButtonPressed(sf::Mouse::Left) && event.type != sf::Event::MouseButtonReleased)
-							{
-								sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-								sf::Vector2f pos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-								newFlashCard.setCardPos('Q', pos);
-								window.clear();
-								window.draw(note);
-								window.draw(matchTitle);
-								newFlashCard.draw(window, font);
-								window.display();
-								if (newFlashCard.checkCollision())
-								{
+						matchGameLogistics(temp1, window, note, matchTitle, font, event, temp2, temp3, temp4, temp5);
+						matchGameLogistics(temp2, window, note, matchTitle, font, event, temp1, temp3, temp4, temp5);
+						matchGameLogistics(temp3, window, note, matchTitle, font, event, temp1, temp2, temp4, temp5);
+						matchGameLogistics(temp4, window, note, matchTitle, font, event, temp1, temp2, temp3, temp5);
+						matchGameLogistics(temp5, window, note, matchTitle, font, event, temp1, temp2, temp3, temp4);
 
-									newFlashCard.setCardColor(sf::Color::Green);
-									window.clear();
-									window.draw(note);
-									window.draw(matchTitle);
-									newFlashCard.draw(window, font);
-									window.display();
-									sleep(1);
-									event.type = sf::Event::MouseButtonReleased;
-									newFlashCard.setOpacity(false);
-								}
-							}
-						}
+						// if (newFlashCard.getCardQ().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+						// {
+						// 	while (sf::Mouse::isButtonPressed(sf::Mouse::Left) && event.type != sf::Event::MouseButtonReleased)
+						// 	{
+						// 		sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+						// 		sf::Vector2f pos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+						// 		newFlashCard.setCardPos('Q', pos);
+						// 		window.clear();
+						// 		window.draw(note);
+						// 		window.draw(matchTitle);
+						// 		newFlashCard.draw(window, font);
+						// 		window.display();
+						// 		if (newFlashCard.checkCollision())
+						// 		{
+
+						// 			newFlashCard.setCardColor(sf::Color::Green);
+						// 			window.clear();
+						// 			window.draw(note);
+						// 			window.draw(matchTitle);
+						// 			newFlashCard.draw(window, font);
+						// 			window.display();
+						// 			sleep(1);
+						// 			event.type = sf::Event::MouseButtonReleased;
+						// 			newFlashCard.setOpacity(false);
+						// 		}
+						// 	}
+						// }
 						break;
 					case sf::Event::KeyPressed:
 						if (event.key.code == sf::Keyboard::E)
 						{
 							match = false;
 							menuPending = true;
-							newFlashCard.setDefault(font);
+							setDefault(cardDeck, font);
 						}
 						break;
 				}
 			}
-		}
-
-		if (match && newFlashCard.checkCollision())
-		{
-			std::cout << "Correct!\n";
 		}
 
 		window.clear();
@@ -549,7 +605,26 @@ int main()
 							   // window.draw(newFlashCard.getCardQ());
 							   // window.draw(newFlashCard.getCardA());
 			window.draw(note);
-			newFlashCard.draw(window, font);
+			if (firstRun)
+			{
+				temp1 = cardDeck.sut.at(questions[0]);
+				temp2 = cardDeck.sut.at(questions[1]);
+				temp3 = cardDeck.sut.at(questions[2]);
+				temp4 = cardDeck.sut.at(questions[3]);
+				temp5 = cardDeck.sut.at(questions[4]);
+				std::cout << "temp1 x: " << temp1.getCardQ().getPosition().x << " y: " << temp1.getCardQ().getPosition().y << std::endl;
+				std::cout << "temp2 x: " << temp2.getCardQ().getPosition().x << " y: " << temp2.getCardQ().getPosition().y << std::endl;
+				std::cout << "temp3 x: " << temp3.getCardQ().getPosition().x << " y: " << temp3.getCardQ().getPosition().y << std::endl;
+				std::cout << "temp4 x: " << temp4.getCardQ().getPosition().x << " y: " << temp4.getCardQ().getPosition().y << std::endl;
+				std::cout << "temp5 x: " << temp5.getCardQ().getPosition().x << " y: " << temp5.getCardQ().getPosition().y << std::endl;
+				firstRun = false;
+			}
+
+			temp1.draw(window, font);
+			temp2.draw(window, font);
+			temp3.draw(window, font);
+			temp4.draw(window, font);
+			temp5.draw(window, font);
 			window.draw(matchTitle);
 		}
 
