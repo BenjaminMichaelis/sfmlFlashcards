@@ -62,12 +62,12 @@ public:
 	bool isEmpty()
 	{
 		return Q.empty() || A.empty();
-		;
 	}
 	std::string getA()
 	{
 		return A;
 	}
+
 	void setCardPos(char card, sf::Vector2f& pos)
 	{
 		switch (card)
@@ -87,6 +87,33 @@ public:
 	{
 		cardQ->setFillColor(c);
 		cardA->setFillColor(c);
+	}
+
+	void setQColor(sf::Color c)
+	{
+		cardQ->setFillColor(c);
+	}
+
+	void setAColor(sf::Color c)
+	{
+		cardA->setFillColor(c);
+	}
+
+	void moveCard(char card, sf::Vector2f m)
+	{
+		switch (card)
+		{
+			default:
+				cardQ->move(m);
+				cardA->move(m);
+				break;
+			case 'Q':
+				cardQ->move(m);
+				break;
+			case 'A':
+				cardA->move(m);
+				break;
+		}
 	}
 
 	void setOpacity(bool o)
@@ -124,16 +151,28 @@ public:
 		setText(question, answer, font);
 	}
 
-	bool checkCollision()
+	bool checkCollision() // collision between correct question-answer pair
 	{
 		sf::Vector2f halfsize = cardQ->getSize() / 2.0f;
 		sf::Vector2f delta(std::abs(cardQ->getPosition().x - cardA->getPosition().x), std::abs(cardQ->getPosition().y - cardA->getPosition().y));
 		sf::Vector2f intersect(delta.x - (halfsize.x + halfsize.x), delta.y - (halfsize.y + halfsize.y));
-		if (intersect.x <= 0.0f && intersect.y <= 0.0f)
+		if ((intersect.x <= 0.0f && intersect.y <= 0.0f) && opacity == true)
 			return true;
 
 		return false;
 	}
+
+	bool checkCollision(FlashCard& f) // collision between question and parameter card (other incorrect answers)
+	{
+		sf::Vector2f halfsize = cardQ->getSize() / 2.0f;
+		sf::Vector2f delta(std::abs(cardQ->getPosition().x - f.getCardA().getPosition().x), std::abs(cardQ->getPosition().y - f.getCardA().getPosition().y));
+		sf::Vector2f intersect(delta.x - (halfsize.x + halfsize.x), delta.y - (halfsize.y + halfsize.y));
+		if ((intersect.x <= 0.0f && intersect.y <= 0.0f) && (opacity == true && f.checkOpacity()))
+			return true;
+
+		return false;
+	}
+
 	void draw(sf::RenderWindow& window, sf::Font& f)
 	{
 		sf::Text question, answer;
