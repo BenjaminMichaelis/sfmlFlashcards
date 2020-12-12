@@ -159,7 +159,7 @@ int main()
 	// in Windows at least, this must be called before creating the window
 	float screenScalingFactor = platform.getScreenScalingFactor(window.getSystemHandle());
 	// Use the screenScalingFactor
-	window.create(sf::VideoMode(600.0f * screenScalingFactor, 600.0f * screenScalingFactor), "MENU!", sf::Style::Close | sf::Style::Titlebar);
+	window.create(sf::VideoMode(600.0f * screenScalingFactor, 600.0f * screenScalingFactor), "TESTLY Flashcards", sf::Style::Close | sf::Style::Titlebar);
 
 	sf::Font font;
 	font.loadFromFile("src/Font/JetBrainsMono-VariableFont_wght.ttf");
@@ -549,7 +549,7 @@ int main()
 						break;
 				}
 			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
 			{
 				int i = 0;
 				std::string term = tbox3.getText();
