@@ -434,138 +434,143 @@ int main()
         }
 
         // addCard implementation
-        if (addC && sf::Mouse::isButtonPressed(sf::Mouse::Left)) // addC added to conditional so this only runs when A is pressed
+        if(addC)
         {
-            if (rect1.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if top box is being clicked
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // addC added to conditional so this only runs when A is pressed
             {
-                tbox2.setSelected(false);
-                tbox1.setSelected(true);
-            }
-
-            else if (rect2.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if bottom text box is being clicked
-            {
-                tbox1.setSelected(false);
-                tbox2.setSelected(true);
-            }
-
-            else if (nextBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if next button is being clicked
-            {
-                //add current card to map
-                //clear text box objects and what is being drawn for a new card
-                FlashCard temp;
-                temp.setCardSize(sf::Vector2f(100.0f, 50.0f));
-                temp.setCardOrigin({ 50.0f, 25.0f });
-                temp.setA(tbox2.getText());
-                temp.setQ(tbox1.getText());
-                if (!temp.isEmpty())
+                if (rect1.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if top box is being clicked
                 {
-                    temp.setDefault(font);
-                    cardDeck.insert(index++, temp);
-                    tbox1.clear();
-                    tbox2.clear();
+                    tbox2.setSelected(false);
+                    tbox1.setSelected(true);
                 }
+
+                else if (rect2.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if bottom text box is being clicked
+                {
+                    tbox1.setSelected(false);
+                    tbox2.setSelected(true);
+                }
+
+                else if (nextBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if next button is being clicked
+                {
+                    //add current card to map
+                    //clear text box objects and what is being drawn for a new card
+                    FlashCard temp;
+                    temp.setCardSize(sf::Vector2f(100.0f, 50.0f));
+                    temp.setCardOrigin({ 50.0f, 25.0f });
+                    temp.setA(tbox2.getText());
+                    temp.setQ(tbox1.getText());
+                    if (!temp.isEmpty())
+                    {
+                        temp.setDefault(font);
+                        cardDeck.insert(index++, temp);
+                        tbox1.clear();
+                        tbox2.clear();
+                    }
+                    else
+                    {
+                        std::cout << "Cannot save blank textbox, please fill in both textboxes and try again" << std::endl;
+                    }
+                }
+
+                else if (doneBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if done button is being clicked
+                {
+                    FlashCard temp;
+                    temp.setCardSize(sf::Vector2f(100.0f, 50.0f));
+                    temp.setCardOrigin({ 50.0f, 25.0f });
+                    temp.setA(tbox2.getText());
+                    temp.setQ(tbox1.getText());
+                    if (!temp.isEmpty())
+                    {
+                        temp.setDefault(font);
+                        cardDeck.insert(index++, temp);
+                        tbox1.clear();
+                        tbox2.clear();
+                    }
+                    addC = false;
+                    menuPending = true;
+                }
+
                 else
                 {
-                    std::cout << "Cannot save blank textbox, please fill in both textboxes and try again" << std::endl;
+                    tbox1.setSelected(false);
+                    tbox2.setSelected(false);
                 }
             }
-
-            else if (doneBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if done button is being clicked
-            {
-                FlashCard temp;
-                temp.setCardSize(sf::Vector2f(100.0f, 50.0f));
-                temp.setCardOrigin({ 50.0f, 25.0f });
-                temp.setA(tbox2.getText());
-                temp.setQ(tbox1.getText());
-                if (!temp.isEmpty())
-                {
-                    temp.setDefault(font);
-                    cardDeck.insert(index++, temp);
-                    tbox1.clear();
-                    tbox2.clear();
-                }
-                addC = false;
-                menuPending = true;
-            }
-
-            else
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
             {
                 tbox1.setSelected(false);
                 tbox2.setSelected(false);
             }
-        }
-        else if (addC && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-        {
-            tbox1.setSelected(false);
-            tbox2.setSelected(false);
-        }
-        if (!menuPending && addC)
-        {
-            while (window.pollEvent(event))
+            if (!menuPending)
             {
-                switch (event.type)
+                while (window.pollEvent(event))
                 {
-                    default:
-                        break;
-                    case sf::Event::Closed:
-                        window.close();
-                        break;
-                    case sf::Event::TextEntered:
-                        tbox1.typedOn(event);
-                        tbox2.typedOn(event);
-                }
-            }
-        }
-
-        // delete card implementation
-        if (deleteC && sf::Mouse::isButtonPressed(sf::Mouse::Left)) // addC added to conditional so this only runs when A is pressed
-        {
-            if (rect3.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
-                tbox3.setSelected(true);
-            else if (backBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
-            {
-                menuPending = true;
-                deleteC = false;
-            }
-
-            else
-                tbox3.setSelected(false);
-        }
-        else if (deleteC && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-            tbox3.setSelected(false);
-        if (!menuPending && deleteC)
-        {
-            while (window.pollEvent(event))
-            {
-                switch (event.type)
-                {
-                    default:
-                        break;
-                    case sf::Event::Closed:
-                        window.close();
-                        break;
-                    case sf::Event::TextEntered:
-                        tbox3.typedOn(event);
-                        break;
-                }
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
-            {
-                int i = 0;
-                std::string term = tbox3.getText();
-                if (term != "")
-                {
-                    for (std::unordered_map<int, FlashCard>::iterator it = cardDeck.sut.begin(); it != cardDeck.sut.end(); it++)
+                    switch (event.type)
                     {
-                        if (it->second.getQ() == term)
-                            i = it->first;
+                        default:
+                            break;
+                        case sf::Event::Closed:
+                            window.close();
+                            break;
+                        case sf::Event::TextEntered:
+                            tbox1.typedOn(event);
+                            tbox2.typedOn(event);
                     }
-                    if (i != 0)
-                        cardDeck.sut.erase(i);
-                    else
-                        std::cout << "Could not find term!\n";
+                }
+            }
+        }
+        // delete card implementation
+        if(deleteC)
+        {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // addC added to conditional so this only runs when A is pressed
+            {
+                if (rect3.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                    tbox3.setSelected(true);
+                else if (backBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                {
+                    menuPending = true;
+                    deleteC = false;
+                }
 
-                    tbox3.clear();
+                else
+                    tbox3.setSelected(false);
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                tbox3.setSelected(false);
+            if (!menuPending)
+            {
+                while (window.pollEvent(event))
+                {
+                    switch (event.type)
+                    {
+                        default:
+                            break;
+                        case sf::Event::Closed:
+                            window.close();
+                            break;
+                        case sf::Event::TextEntered:
+                            tbox3.typedOn(event);
+                            break;
+                    }
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+                {
+                    int i = 0;
+                    std::string term = tbox3.getText();
+                    if (term != "")
+                    {
+                        for (std::unordered_map<int, FlashCard>::iterator it = cardDeck.sut.begin(); it != cardDeck.sut.end(); it++)
+                        {
+                            if (it->second.getQ() == term)
+                                i = it->first;
+                        }
+                        if (i != 0)
+                            cardDeck.sut.erase(i);
+                        else
+                            std::cout << "Could not find term!\n";
+
+                        tbox3.clear();
+                    }
                 }
             }
         }
