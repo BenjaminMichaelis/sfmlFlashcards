@@ -24,10 +24,10 @@ void setDefault(Hash<int, FlashCard>& hash, sf::Font& font)
 }
 
 // local checkOpacity funcion to check if the flashcards used in match are all transparent, if not this returns false
-bool checkOpacity(FlashCard& f1, FlashCard& f2, FlashCard& f3);
-bool checkOpacity(FlashCard& f1, FlashCard& f2, FlashCard& f3)
+bool checkOpacity(FlashCard& f1, FlashCard& f2, FlashCard& f3, FlashCard& f4, FlashCard& f5);
+bool checkOpacity(FlashCard& f1, FlashCard& f2, FlashCard& f3, FlashCard& f4, FlashCard& f5)
 {
-	if ((!f1.checkOpacity() && !f2.checkOpacity()) && !f3.checkOpacity()) // return true if all three flashcards are transparent
+	if (((!f1.checkOpacity() && !f2.checkOpacity()) && (!f3.checkOpacity() && !f4.checkOpacity())) && !f5.checkOpacity()) // return true if all five flashcards are transparent
 		return true;
 
 	return false;
@@ -62,8 +62,8 @@ void checkCollision(FlashCard& f1, FlashCard& f2, sf::Font& font)
 }
 
 // local function that holds the logic for the match game: click event, correct answer collisions, incorrect answer collisions, etc.
-void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text& note, sf::Text& matchTitle, sf::Font& font, sf::Event& event, Hash<int, FlashCard>& cardDeck, int index1, int index2);
-void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text& note, sf::Text& matchTitle, sf::Font& font, sf::Event& event, Hash<int, FlashCard>& cardDeck, int index1, int index2)
+void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text& note, sf::Text& matchTitle, sf::Font& font, sf::Event& event, Hash<int, FlashCard>& cardDeck, int index1, int index2, int index3, int index4);
+void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text& note, sf::Text& matchTitle, sf::Font& font, sf::Event& event, Hash<int, FlashCard>& cardDeck, int index1, int index2, int index3, int index4)
 {
 	if (flashCard.getCardQ().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 	{
@@ -78,6 +78,8 @@ void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text
 			flashCard.draw(window, font);
 			cardDeck.sut[index1].draw(window, font);
 			cardDeck.sut[index2].draw(window, font);
+			cardDeck.sut[index3].draw(window, font);
+			cardDeck.sut[index4].draw(window, font);
 			window.display();
 			if (flashCard.checkCollision()) // check for correct answer
 			{
@@ -88,6 +90,8 @@ void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text
 				flashCard.draw(window, font);
 				cardDeck.sut[index1].draw(window, font);
 				cardDeck.sut[index2].draw(window, font);
+				cardDeck.sut[index3].draw(window, font);
+				cardDeck.sut[index4].draw(window, font);
 				window.display();
 				sleep(1);
 				event.type = sf::Event::MouseButtonReleased;
@@ -105,6 +109,8 @@ void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text
 					flashCard.draw(window, font);
 					cardDeck.sut[index1].draw(window, font);
 					cardDeck.sut[index2].draw(window, font);
+					cardDeck.sut[index3].draw(window, font);
+					cardDeck.sut[index4].draw(window, font);
 					window.display();
 					sleep(1);
 					if (i == 0)
@@ -112,7 +118,7 @@ void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text
 						flashCard.setQColor(sf::Color::White);
 						cardDeck.sut[index1].setAColor(sf::Color::White);
 						flashCard.moveCard('Q', { -10, 0 });
-						cardDeck.sut[index2].moveCard('A', { 10, 0 });
+						cardDeck.sut[index1].moveCard('A', { 10, 0 });
 					}
 				}
 			}
@@ -128,6 +134,8 @@ void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text
 					flashCard.draw(window, font);
 					cardDeck.sut[index1].draw(window, font);
 					cardDeck.sut[index2].draw(window, font);
+					cardDeck.sut[index3].draw(window, font);
+					cardDeck.sut[index4].draw(window, font);
 					window.display();
 					sleep(1);
 					if (i == 0)
@@ -136,6 +144,56 @@ void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text
 						cardDeck.sut[index2].setAColor(sf::Color::White);
 						flashCard.moveCard('Q', { -10, 0 });
 						cardDeck.sut[index2].moveCard('A', { 10, 0 });
+					}
+				}
+			}
+			if (flashCard.checkCollision(cardDeck.sut[index3])) // check for incorrect answer
+			{
+				flashCard.setQColor(sf::Color::Red);
+				cardDeck.sut[index3].setAColor(sf::Color::Red);
+				for (int i = 0; i < 2; i++)
+				{
+					window.clear();
+					window.draw(note);
+					window.draw(matchTitle);
+					flashCard.draw(window, font);
+					cardDeck.sut[index1].draw(window, font);
+					cardDeck.sut[index2].draw(window, font);
+					cardDeck.sut[index3].draw(window, font);
+					cardDeck.sut[index4].draw(window, font);
+					window.display();
+					sleep(1);
+					if (i == 0)
+					{
+						flashCard.setQColor(sf::Color::White);
+						cardDeck.sut[index3].setAColor(sf::Color::White);
+						flashCard.moveCard('Q', { -10, 0 });
+						cardDeck.sut[index3].moveCard('A', { 10, 0 });
+					}
+				}
+			}
+			if (flashCard.checkCollision(cardDeck.sut[index4])) // check for incorrect answer
+			{
+				flashCard.setQColor(sf::Color::Red);
+				cardDeck.sut[index4].setAColor(sf::Color::Red);
+				for (int i = 0; i < 2; i++)
+				{
+					window.clear();
+					window.draw(note);
+					window.draw(matchTitle);
+					flashCard.draw(window, font);
+					cardDeck.sut[index1].draw(window, font);
+					cardDeck.sut[index2].draw(window, font);
+					cardDeck.sut[index3].draw(window, font);
+					cardDeck.sut[index4].draw(window, font);
+					window.display();
+					sleep(1);
+					if (i == 0)
+					{
+						flashCard.setQColor(sf::Color::White);
+						cardDeck.sut[index4].setAColor(sf::Color::White);
+						flashCard.moveCard('Q', { -10, 0 });
+						cardDeck.sut[index4].moveCard('A', { 10, 0 });
 					}
 				}
 			}
@@ -153,7 +211,7 @@ int main()
 	//redblacktree
 	// RedBlackTree<std::string, FlashCard> cardDeck;
 	Hash<int, FlashCard> cardDeck;
-	int index = 1, rand1 = 0, rand2 = 0, rand3 = 0;
+	int index = 1, rand1 = 0, rand2 = 0, rand3 = 0, rand4 = 0, rand5 = 0;
 	sf::RenderWindow window;
 
 	// in Windows at least, this must be called before creating the window
@@ -269,12 +327,17 @@ int main()
 	tbox3.setpos({ 100, 210 });
 	tbox3.setLimit(true, 30);
 
-	sf::Text t3;
+	sf::Text t3, success;
 	t3.setFont(font);
 	t3.setCharacterSize(20);
 	t3.setString("Delete Term");
 	t3.setPosition({ 100, 75 });
 	t3.setFillColor(sf::Color::White);
+	success.setFont(font);
+	success.setCharacterSize(20);
+	success.setString("Success!");
+	success.setPosition({ 100, 255 });
+	success.setFillColor(sf::Color::White);
 
 	sf::RectangleShape rect3(sf::Vector2f(400, 40));
 	rect3.setPosition({ 100, 200 });
@@ -286,7 +349,7 @@ int main()
 	menu.setFillColor(sf::Color::Black);
 	menu.setPosition(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2));
 
-	sf::Text menuT, option1, option2, option3, option4, instr, option5, option6, warning;
+	sf::Text menuT, option1, option2, option3, option4, instr, option5, option6, warning, tryAgain;
 	menuT.setFont(font);
 	option1.setFont(font);
 	option2.setFont(font);
@@ -296,6 +359,7 @@ int main()
 	option5.setFont(font);
 	option6.setFont(font);
 	warning.setFont(font);
+	tryAgain.setFont(font);
 	menuT.setCharacterSize(40);
 	option1.setCharacterSize(30);
 	option2.setCharacterSize(30);
@@ -305,6 +369,7 @@ int main()
 	option5.setCharacterSize(30);
 	option6.setCharacterSize(30);
 	warning.setCharacterSize(15);
+	tryAgain.setCharacterSize(20);
 	menuT.setFillColor(sf::Color::White);
 	option1.setFillColor(sf::Color::White);
 	option2.setFillColor(sf::Color::White);
@@ -314,6 +379,7 @@ int main()
 	option5.setFillColor(sf::Color::White);
 	option6.setFillColor(sf::Color::White);
 	warning.setFillColor(sf::Color::White);
+	tryAgain.setFillColor(sf::Color::White);
 	menuT.setOrigin(sf::Vector2f(menuT.getCharacterSize() / 2, menuT.getCharacterSize() / 2));
 	option1.setOrigin(sf::Vector2f(option1.getCharacterSize() / 2, option1.getCharacterSize() / 2));
 	option2.setOrigin(sf::Vector2f(option2.getCharacterSize() / 2, option2.getCharacterSize() / 2));
@@ -323,6 +389,7 @@ int main()
 	option5.setOrigin(sf::Vector2f(option5.getCharacterSize() / 2, option5.getCharacterSize() / 2));
 	option6.setOrigin(sf::Vector2f(option6.getCharacterSize() / 2, option6.getCharacterSize() / 2));
 	warning.setOrigin(sf::Vector2f(warning.getCharacterSize() / 2, warning.getCharacterSize() / 2));
+	tryAgain.setOrigin(sf::Vector2f(tryAgain.getCharacterSize() / 2, tryAgain.getCharacterSize() / 2));
 	menuT.setString("Welcome To Testly!");
 	option1.setString("A) Add FlashCard");
 	option2.setString("B) Delete FlashCard");
@@ -331,7 +398,8 @@ int main()
 	instr.setString("Select an option by pressing the corresponding letter!");
 	option5.setString("E) Review");
 	option6.setString("F) Exit");
-	warning.setString("Warning: Cannot begin match, review,\nnor delete unless at least 3 cards are added!");
+	warning.setString("Warning: Cannot begin match, review,\nnor delete unless at least 5 cards are added!");
+	tryAgain.setString("Try Again!");
 
 	float verticalReference = window.getSize().y / 4;
 	menuT.setPosition(sf::Vector2f(window.getSize().x / 4 - 20, verticalReference));
@@ -343,6 +411,7 @@ int main()
 	option5.setPosition(sf::Vector2f(window.getSize().x / 4 - 20, verticalReference * 1.5 + (35 * 4)));
 	option6.setPosition(sf::Vector2f(window.getSize().x / 4 - 20, verticalReference * 1.5 + (35 * 5)));
 	warning.setPosition(sf::Vector2f(window.getSize().x / 4 - 60, verticalReference * 1.5 + (35 * 6) + 15));
+	tryAgain.setPosition(sf::Vector2f(window.getSize().x / 4, verticalReference * 1.5 + (35 * 8)));
 	// match implementation
 
 	sf::Text matchTitle, note, goodJob, playAgain;
@@ -375,16 +444,18 @@ int main()
 	sf::RectangleShape reviewCard(sf::Vector2f(500, 300));
 	reviewCard.setOrigin(reviewCard.getSize().x / 2, reviewCard.getSize().y / 2);
 	reviewCard.setFillColor(sf::Color::White);
-	reviewCard.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+	reviewCard.setPosition(window.getSize().x / 2, window.getSize().y / 2 - 50);
 	sf::Text reviewText;
-	reviewText.setCharacterSize(24);
+	reviewText.setFont(font);
+	reviewText.setCharacterSize(18);
 	reviewText.setOrigin(reviewText.getCharacterSize() / 2, reviewText.getCharacterSize() / 2);
 	reviewText.setFillColor(sf::Color::Black);
 	reviewText.setPosition(reviewCard.getPosition().x, reviewCard.getPosition().y);
 	FlashCard reviewFlashCard;
 
-	bool menuPending = true, addC = false, match = false, deleteC = false, dir = false, firstRun = true, playAgainB = false, review = false, reviewQ = false, reviewA = true, threeCardsAdded = false; // extra booleans to control the flow of the window relative to its internal relations
-																																																	   // (deleteC and dir not used yet, so they cause errors if not commented out)
+	bool menuPending = true,
+		 addC = false, match = false, deleteC = false, dir = false, firstRun = true, playAgainB = false, review = false, reviewQ = false, reviewA = true, fiveCardsAdded = false; // extra booleans to control the flow of the window relative to its internal relations
+																																												  // (deleteC and dir not used yet, so they cause errors if not commented out)
 	sf::Vector2f randomQP, randomAP;
 	FlashCard temp1, temp2, temp3, temp4, temp5;
 	std::vector<std::string> questions;
@@ -422,20 +493,54 @@ int main()
 						}
 						else if (event.key.code == sf::Keyboard::B) // transition to delete card
 						{
-							if (threeCardsAdded)
+							if (cardDeck.sut.size() > 0)
 							{
 								menuPending = false;
 								deleteC = true;
 							}
+							else
+							{
+								window.clear();
+								window.draw(backgroundSp);
+								window.draw(menuT);
+								window.draw(option1);
+								window.draw(option2);
+								window.draw(option3);
+								window.draw(option4);
+								window.draw(option5);
+								window.draw(option6);
+								window.draw(warning);
+								window.draw(tryAgain);
+								window.display();
+								sleep(1.5);
+							}
+
 							std::cout << "You pressed B!\n";
 						}
 						else if (event.key.code == sf::Keyboard::C) // transition to Match game
 						{
-							if (threeCardsAdded)
+							if (fiveCardsAdded)
 							{
 								menuPending = false;
 								match = true;
 							}
+							else
+							{
+								window.clear();
+								window.draw(backgroundSp);
+								window.draw(menuT);
+								window.draw(option1);
+								window.draw(option2);
+								window.draw(option3);
+								window.draw(option4);
+								window.draw(option5);
+								window.draw(option6);
+								window.draw(warning);
+								window.draw(tryAgain);
+								window.display();
+								sleep(1.5);
+							}
+
 							std::cout << "You pressed C!\n";
 						}
 						else if (event.key.code == sf::Keyboard::D) // transition to directions
@@ -446,10 +551,26 @@ int main()
 						}
 						else if (event.key.code == sf::Keyboard::E) // transition to review
 						{
-							if (threeCardsAdded)
+							if (fiveCardsAdded)
 							{
 								menuPending = false;
 								review = true;
+							}
+							else
+							{
+								window.clear();
+								window.draw(backgroundSp);
+								window.draw(menuT);
+								window.draw(option1);
+								window.draw(option2);
+								window.draw(option3);
+								window.draw(option4);
+								window.draw(option5);
+								window.draw(option6);
+								window.draw(warning);
+								window.draw(tryAgain);
+								window.display();
+								sleep(1.5);
 							}
 
 							std::cout << "You pressed E!\n";
@@ -522,12 +643,8 @@ int main()
 						cardDeck.insert(index++, temp);
 						tbox1.clear();
 						tbox2.clear();
-						if (cardDeck.sut.size() >= 3)
-							threeCardsAdded = true;
-					}
-					else
-					{
-						std::cout << "Cannot save blank textbox, please fill in both textboxes and try again" << std::endl;
+						if (cardDeck.sut.size() >= 5)
+							fiveCardsAdded = true;
 					}
 				}
 
@@ -544,8 +661,8 @@ int main()
 						cardDeck.insert(index++, temp);
 						tbox1.clear();
 						tbox2.clear();
-						if (cardDeck.sut.size() >= 3)
-							threeCardsAdded = true;
+						if (cardDeck.sut.size() >= 5)
+							fiveCardsAdded = true;
 					}
 					addC = false;
 					menuPending = true;
@@ -628,8 +745,18 @@ int main()
 						if (i != 0)
 						{
 							cardDeck.sut.erase(i);
-							if (cardDeck.sut.size() < 3)
-								threeCardsAdded = false;
+							window.clear();
+							window.draw(backgroundSp);
+							window.draw(rect3);
+							window.draw(t3);
+							window.draw(backBox);
+							window.draw(backText);
+							tbox3.drawTo(window);
+							window.draw(success);
+							window.display();
+							sleep(1);
+							if (cardDeck.sut.size() < 5)
+								fiveCardsAdded = false;
 						}
 
 						else
@@ -654,10 +781,12 @@ int main()
 						window.close();
 						break;
 					case sf::Event::MouseButtonPressed:
-						matchGameLogistics(cardDeck.sut[rand1], window, note, matchTitle, font, event, cardDeck, rand2, rand3);
-						matchGameLogistics(cardDeck.sut[rand2], window, note, matchTitle, font, event, cardDeck, rand1, rand3);
-						matchGameLogistics(cardDeck.sut[rand3], window, note, matchTitle, font, event, cardDeck, rand1, rand2);
-						if (checkOpacity(cardDeck.sut[rand1], cardDeck.sut[rand2], cardDeck.sut[rand3])) // if these are not all transparent, checkOpacity returns false
+						matchGameLogistics(cardDeck.sut[rand1], window, note, matchTitle, font, event, cardDeck, rand2, rand3, rand4, rand5);
+						matchGameLogistics(cardDeck.sut[rand2], window, note, matchTitle, font, event, cardDeck, rand1, rand3, rand4, rand5);
+						matchGameLogistics(cardDeck.sut[rand3], window, note, matchTitle, font, event, cardDeck, rand1, rand2, rand4, rand5);
+						matchGameLogistics(cardDeck.sut[rand4], window, note, matchTitle, font, event, cardDeck, rand1, rand2, rand3, rand5);
+						matchGameLogistics(cardDeck.sut[rand5], window, note, matchTitle, font, event, cardDeck, rand1, rand2, rand4, rand3);
+						if (checkOpacity(cardDeck.sut[rand1], cardDeck.sut[rand2], cardDeck.sut[rand3], cardDeck.sut[rand4], cardDeck.sut[rand5])) // if these are not all transparent, checkOpacity returns false
 						{
 							playAgainB = true;
 							window.clear();
@@ -704,15 +833,23 @@ int main()
 						if (reviewCard.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
 							if (reviewQ)
+							{
 								reviewText.setString(reviewFlashCard.getQ());
+								reviewText.setOrigin(sf::Vector2f(floor(reviewText.getLocalBounds().width / 2), floor(reviewText.getLocalBounds().height / 2)));
+							}
+
 							else if (reviewA)
+							{
 								reviewText.setString(reviewFlashCard.getA());
+								reviewText.setOrigin(sf::Vector2f(floor(reviewText.getLocalBounds().width / 2), floor(reviewText.getLocalBounds().height / 2)));
+							}
 						}
 						else if (nextBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if next button is being clicked
 						{
 							int random = rand() % (index - 1) + 1;
 							reviewFlashCard = cardDeck.sut[random];
 							reviewText.setString(reviewFlashCard.getQ());
+							reviewText.setOrigin(sf::Vector2f(floor(reviewText.getLocalBounds().width / 2), floor(reviewText.getLocalBounds().height / 2)));
 							reviewQ = false;
 							reviewA = true;
 						}
@@ -724,6 +861,7 @@ int main()
 							menuPending = true;
 							reviewQ = false;
 							reviewA = true;
+							firstRun = true;
 						}
 						break;
 				}
@@ -802,14 +940,27 @@ int main()
 				rand1 = rand() % (index - 1) + 1;
 				rand2 = rand() % (index - 1) + 1;
 				rand3 = rand() % (index - 1) + 1;
+				rand4 = rand() % (index - 1) + 1;
+				rand5 = rand() % (index - 1) + 1;
 				while (rand1 == rand2)
 					rand2 = rand() % (index - 1) + 1;
 				while (rand1 == rand3 || rand2 == rand3)
 					rand3 = rand() % (index - 1) + 1;
+				while ((rand1 == rand4 || rand2 == rand4) || rand3 == rand4)
+					rand4 = rand() % (index - 1) + 1;
+				while ((rand1 == rand5 || rand2 == rand5) || (rand3 == rand5 || rand4 == rand5))
+					rand5 = rand() % (index - 1) + 1;
 
 				checkCollision(cardDeck.sut[rand1], cardDeck.sut[rand2], font);
 				checkCollision(cardDeck.sut[rand1], cardDeck.sut[rand3], font);
 				checkCollision(cardDeck.sut[rand2], cardDeck.sut[rand3], font);
+				checkCollision(cardDeck.sut[rand1], cardDeck.sut[rand4], font);
+				checkCollision(cardDeck.sut[rand1], cardDeck.sut[rand5], font);
+				checkCollision(cardDeck.sut[rand2], cardDeck.sut[rand4], font);
+				checkCollision(cardDeck.sut[rand2], cardDeck.sut[rand5], font);
+				checkCollision(cardDeck.sut[rand3], cardDeck.sut[rand4], font);
+				checkCollision(cardDeck.sut[rand3], cardDeck.sut[rand5], font);
+				checkCollision(cardDeck.sut[rand4], cardDeck.sut[rand5], font);
 
 				firstRun = false;
 			}
@@ -821,6 +972,8 @@ int main()
 			cardDeck.sut[rand1].draw(window, font);
 			cardDeck.sut[rand2].draw(window, font);
 			cardDeck.sut[rand3].draw(window, font);
+			cardDeck.sut[rand4].draw(window, font);
+			cardDeck.sut[rand5].draw(window, font);
 			window.draw(matchTitle);
 		}
 
@@ -831,8 +984,10 @@ int main()
 				int random = rand() % (index - 1) + 1;
 				reviewFlashCard = cardDeck.sut[random];
 				reviewText.setString(reviewFlashCard.getQ());
+				reviewText.setOrigin(sf::Vector2f(floor(reviewText.getLocalBounds().width / 2), floor(reviewText.getLocalBounds().height / 2)));
 				firstRun = false;
 			}
+			window.draw(backgroundSp);
 			window.draw(reviewCard);
 			window.draw(reviewText);
 			window.draw(nextBox);
