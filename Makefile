@@ -2,7 +2,6 @@
 SUFFIXES =
 .SUFFIXES: .c .cpp .h .hpp .rc .res .inl .o .d .asm
 
-
 #==============================================================================
 MAKEFLAGS += --no-print-directory
 #==============================================================================
@@ -368,6 +367,10 @@ clean:
 	$(if $(_CLEAN),@echo '   Cleaning old build files & folders...'; echo)
 	$(_Q)$(RM) $(TARGET) $(DEPS) $(OBJS)
 .PHONY: clean
+
+
+run:
+	bin/Debug/sfmlFlashcards
 
 #==============================================================================
 # Production recipes
