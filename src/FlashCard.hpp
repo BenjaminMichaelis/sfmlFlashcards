@@ -14,11 +14,11 @@ private:
 public:
 	FlashCard(std::string Q, std::string A)
 	{
-		cardQ = new sf::RectangleShape(sf::Vector2f(300.0f, 200.0f));
-		cardA = new sf::RectangleShape(sf::Vector2f(300.0f, 200.0f));
+		cardQ = new sf::RectangleShape(sf::Vector2f(200.0f, 85.0f));
+		cardA = new sf::RectangleShape(sf::Vector2f(200.0f, 85.0f));
 
-		cardQ->setOrigin(50.0f, 25.0f);
-		cardA->setOrigin(50.0f, 25.0f);
+		cardQ->setOrigin(cardQ->getSize().x / 2, cardQ->getSize().y / 2);
+		cardA->setOrigin(cardA->getSize().x / 2, cardA->getSize().y / 2);
 
 		this->setCardColor(sf::Color::White);
 
@@ -28,11 +28,11 @@ public:
 	}
 	FlashCard()
 	{
-		cardQ = new sf::RectangleShape(sf::Vector2f(300.0f, 200.0f));
-		cardA = new sf::RectangleShape(sf::Vector2f(300.0f, 200.0f));
+		cardQ = new sf::RectangleShape(sf::Vector2f(200.0f, 85.0f));
+		cardA = new sf::RectangleShape(sf::Vector2f(200.0f, 85.0f));
 
-		cardQ->setOrigin(50.0f, 25.0f);
-		cardA->setOrigin(50.0f, 25.0f);
+		cardQ->setOrigin(cardQ->getSize().x / 2, cardQ->getSize().y / 2);
+		cardA->setOrigin(cardA->getSize().x / 2, cardA->getSize().y / 2);
 		this->setCardColor(sf::Color::White);
 
 		opacity = true;
@@ -143,8 +143,8 @@ public:
 	void setDefault(sf::Font& font)
 	{
 		sf::Text question, answer;
-		sf::Vector2f q(static_cast<float>(rand() % 150 + 50), static_cast<float>(rand() % 475 + 75));
-		sf::Vector2f a(static_cast<float>(rand() % 100 + 450), static_cast<float>(rand() % 475 + 75));
+		sf::Vector2f q(static_cast<float>(rand() % 250 + 50), static_cast<float>(rand() % 575 + 150));
+		sf::Vector2f a(static_cast<float>(rand() % 200 + 550), static_cast<float>(rand() % 575 + 150));
 		setCardColor(sf::Color::White);
 		this->setCardPos('Q', q);
 		this->setCardPos('A', a);
@@ -195,8 +195,8 @@ public:
 		question.setFillColor(sf::Color::Black);
 		answer.setFillColor(sf::Color::Black);
 		question.setOrigin(sf::Vector2f(floor(question.getLocalBounds().width / 2), floor(question.getLocalBounds().height / 2)));
-		answer.setOrigin(sf::Vector2f(floor(question.getLocalBounds().width / 2), floor(question.getLocalBounds().height / 2)));
-		question.setPosition(sf::Vector2f(cardQ->getPosition().x - 25.0f, cardQ->getPosition().y));
+		answer.setOrigin(sf::Vector2f(floor(answer.getLocalBounds().width / 2), floor(answer.getLocalBounds().height / 2)));
+		question.setPosition(sf::Vector2f(cardQ->getPosition().x, cardQ->getPosition().y));
 		answer.setPosition(sf::Vector2f(cardA->getPosition().x, cardA->getPosition().y));
 	}
 

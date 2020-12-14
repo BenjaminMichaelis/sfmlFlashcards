@@ -205,11 +205,7 @@ int main()
 {
 	util::Platform platform;
 	srand((unsigned long)time(NULL));
-#if defined(_DEBUG)
-	std::cout << "Hello World and Teamates!" << std::endl;
-#endif
-	//redblacktree
-	// RedBlackTree<std::string, FlashCard> cardDeck;
+
 	Hash<int, FlashCard> cardDeck;
 	int index = 1, rand1 = 0, rand2 = 0, rand3 = 0, rand4 = 0, rand5 = 0;
 	sf::RenderWindow window;
@@ -217,7 +213,7 @@ int main()
 	// in Windows at least, this must be called before creating the window
 	float screenScalingFactor = platform.getScreenScalingFactor(window.getSystemHandle());
 	// Use the screenScalingFactor
-	window.create(sf::VideoMode(600.0f * screenScalingFactor, 600.0f * screenScalingFactor), "TESTLY Flashcards", sf::Style::Close | sf::Style::Titlebar);
+	window.create(sf::VideoMode(850.0f * screenScalingFactor, 850.0f * screenScalingFactor), "TESTLY Flashcards", sf::Style::Close | sf::Style::Titlebar);
 
 	sf::Font font;
 	font.loadFromFile("src/Font/JetBrainsMono-VariableFont_wght.ttf");
@@ -255,17 +251,19 @@ int main()
 						 "can click on the question card, drag it, and\n"
 						 "hover it over the corresponding answer card\n"
 						 "for points/time! Press E to go back to menu...\n"
-						 "(that works for every selection from the menu)");
+						 "(that works for every selection from the menu)\n"
+						 "You can also press F during match to respawn\n"
+						 "flashcards in case they overlap");
 
 	// add card implementation
 	TextBox tbox1(16, sf::Color::Black, false);
 	tbox1.setFont(font);
-	tbox1.setpos({ 100, 100 });
+	tbox1.setpos({ static_cast<float>(window.getSize().x / 4), 150 });
 	tbox1.setLimit(true, 30);
 
 	TextBox tbox2(16, sf::Color::Black, false);
 	tbox2.setFont(font);
-	tbox2.setpos({ 100, 200 });
+	tbox2.setpos({ static_cast<float>(window.getSize().x / 4), 250 });
 	tbox2.setLimit(true, 300);
 
 	sf::Text t1, t2, cap;
@@ -284,12 +282,12 @@ int main()
 	cap.setString("/300");
 	cap.setFillColor(sf::Color(180, 180, 180, 255));
 
-	t1.setPosition({ 100, 75 });
-	t2.setPosition({ 100, 175 });
-	cap.setPosition({ 400, 410 });
+	t1.setPosition({ static_cast<float>(window.getSize().x / 4), 125 });
+	t2.setPosition({ static_cast<float>(window.getSize().x / 4), 225 });
+	cap.setPosition({ static_cast<float>(window.getSize().x / 4 + 320), 465 });
 
-	rect1.setPosition({ 100, 100 });
-	rect2.setPosition({ 100, 200 });
+	rect1.setPosition({ static_cast<float>(window.getSize().x / 4), 150 });
+	rect2.setPosition({ static_cast<float>(window.getSize().x / 4), 250 });
 	rect1.setOutlineColor(sf::Color::Black);
 	rect2.setOutlineColor(sf::Color::Black);
 
@@ -312,35 +310,35 @@ int main()
 	backText.setFillColor(sf::Color::Black);
 
 	//position the button boxes and texts
-	nextBox.setPosition({ 360, 450 });
-	nextText.setPosition({ 375, 455 });
+	nextBox.setPosition({ static_cast<float>(window.getSize().x / 4 + 220), 490 });
+	nextText.setPosition({ static_cast<float>(window.getSize().x / 4 + 235), 495 });
 
-	doneBox.setPosition({ 450, 450 });
-	doneText.setPosition({ 465, 455 });
+	doneBox.setPosition({ static_cast<float>(window.getSize().x / 4 + 320), 490 });
+	doneText.setPosition({ static_cast<float>(window.getSize().x / 4 + 335), 495 });
 
-	backBox.setPosition({ 100, 300 });
-	backText.setPosition({ 115, 305 });
+	backBox.setPosition({ static_cast<float>(window.getSize().x / 4), 300 });
+	backText.setPosition({ static_cast<float>(window.getSize().x / 4 + 15), 305 });
 
 	//deleteC implementation
 	TextBox tbox3(16, sf::Color::Black, false);
 	tbox3.setFont(font);
-	tbox3.setpos({ 100, 210 });
+	tbox3.setpos({ static_cast<float>(window.getSize().x / 4), 210 });
 	tbox3.setLimit(true, 30);
 
 	sf::Text t3, success;
 	t3.setFont(font);
 	t3.setCharacterSize(20);
 	t3.setString("Delete Term");
-	t3.setPosition({ 100, 75 });
+	t3.setPosition({ static_cast<float>(window.getSize().x / 4), 125 });
 	t3.setFillColor(sf::Color::White);
 	success.setFont(font);
 	success.setCharacterSize(20);
 	success.setString("Success!");
-	success.setPosition({ 100, 255 });
+	success.setPosition({ static_cast<float>(window.getSize().x / 4), 255 });
 	success.setFillColor(sf::Color::White);
 
 	sf::RectangleShape rect3(sf::Vector2f(400, 40));
-	rect3.setPosition({ 100, 200 });
+	rect3.setPosition({ static_cast<float>(window.getSize().x / 4), 200 });
 	rect3.setOutlineColor(sf::Color::Black);
 
 	// menu implementation
@@ -444,7 +442,7 @@ int main()
 	sf::RectangleShape reviewCard(sf::Vector2f(500, 300));
 	reviewCard.setOrigin(reviewCard.getSize().x / 2, reviewCard.getSize().y / 2);
 	reviewCard.setFillColor(sf::Color::White);
-	reviewCard.setPosition(window.getSize().x / 2, window.getSize().y / 2 - 50);
+	reviewCard.setPosition(window.getSize().x / 2, window.getSize().y / 2 - 100);
 	sf::Text reviewText;
 	reviewText.setFont(font);
 	reviewText.setCharacterSize(18);
@@ -633,8 +631,6 @@ int main()
 					//add current card to map
 					//clear text box objects and what is being drawn for a new card
 					FlashCard temp;
-					temp.setCardSize(sf::Vector2f(100.0f, 50.0f));
-					temp.setCardOrigin({ 50.0f, 25.0f });
 					temp.setA(tbox2.getText());
 					temp.setQ(tbox1.getText());
 					if (!temp.isEmpty())
@@ -651,8 +647,6 @@ int main()
 				else if (doneBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if done button is being clicked
 				{
 					FlashCard temp;
-					temp.setCardSize(sf::Vector2f(100.0f, 50.0f));
-					temp.setCardOrigin({ 50.0f, 25.0f });
 					temp.setA(tbox2.getText());
 					temp.setQ(tbox1.getText());
 					if (!temp.isEmpty())
