@@ -846,8 +846,12 @@ int main()
 						}
 						else if (nextBox.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) //check if next button is being clicked
 						{
-							int random = rand() % (index - 1) + 1;
-							reviewFlashCard = cardDeck.sut[random];
+							do
+							{
+								int random = rand() % (index) + 1;
+								reviewFlashCard = cardDeck.sut[random];
+							} while (reviewFlashCard.getQ() == "" || reviewFlashCard.getA() == "");
+
 							reviewText.setString(reviewFlashCard.getQ());
 							reviewText.setOrigin(sf::Vector2f(floor(reviewText.getLocalBounds().width / 2), floor(reviewText.getLocalBounds().height / 2)));
 							reviewQ = false;
@@ -981,8 +985,12 @@ int main()
 		{
 			if (firstRun)
 			{
-				int random = rand() % (index - 1) + 1;
-				reviewFlashCard = cardDeck.sut[random];
+				do
+				{
+					int random = rand() % (index) + 1;
+					reviewFlashCard = cardDeck.sut[random];
+				} while (reviewFlashCard.getQ() == "" || reviewFlashCard.getA() == "");
+
 				reviewText.setString(reviewFlashCard.getQ());
 				reviewText.setOrigin(sf::Vector2f(floor(reviewText.getLocalBounds().width / 2), floor(reviewText.getLocalBounds().height / 2)));
 				firstRun = false;
