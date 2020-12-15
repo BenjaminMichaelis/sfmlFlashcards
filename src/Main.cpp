@@ -1,7 +1,7 @@
 #include "FlashCard.hpp"
-#include "Hash.hpp"
 #include "Platform/Platform.hpp"
 #include "RedBlackTree.hpp"
+#include "TestGame.hpp"
 #include "Textbox.hpp"
 #include <iostream>
 #include <stdlib.h>
@@ -457,17 +457,11 @@ int main()
 		 addC = false, match = false, deleteC = false, dir = false, firstRun = true, playAgainB = false, review = false, reviewQ = false, reviewA = true, fiveCardsAdded = false; // extra booleans to control the flow of the window relative to its internal relations
 																																												  // (deleteC and dir not used yet, so they cause errors if not commented out)
 	sf::Vector2f randomQP, randomAP;
-	FlashCard temp1, temp2, temp3, temp4, temp5;
+	FlashCard temp1;
 	std::vector<std::string> questions;
 
-	// changed focuses:
-
-	// 1. need to implement review and exit menu options
-	// 2. need to implement delete card success message so the user knows it worked
-	// 3. expand match so user can decide to play again (maybe also add menu option to load terms and definitions from file)
-	// 3b. if we add a load option, we should have a box in add card thats like "save to file" or something
-
-	// after these things are improved, we can start thinking about aesthetics, we could also add an exit option in menu
+	// Testing Implementation
+	TestGame test { 1, temp1 };
 
 	while (window.isOpen())
 	{
@@ -1001,6 +995,15 @@ int main()
 
 		window.display();
 	}
+	if (cardDeck.sut[0].getTestC())
+		test.testCorrectMatch(true);
+	else
+		std::cout << "TestCorrectMatch(): Inconclusive...";
+
+	if (cardDeck.sut[0].getTestW())
+		test.testWrongMatch(true);
+	else
+		std::cout << "TestCorrectMatch(): Inconclusive...";
 
 	return 0;
 }

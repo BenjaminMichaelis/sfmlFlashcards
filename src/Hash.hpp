@@ -4,27 +4,27 @@ template <typename K, typename V>
 class Hash
 {
 public:
-    std::unordered_map<K, V> sut;
+	std::unordered_map<K, V> sut;
 
-    Hash()
-    {
-    }
-    ~Hash()
-    {
-    }
+	Hash()
+	{
+	}
+	~Hash()
+	{
+	}
 
-    bool isEmpty()
-    {
-        return sut.empty();
-    }
+	bool isEmpty()
+	{
+		return sut.empty();
+	}
 
-    void insert(K key, V value)
-    {
-        sut[key] = value;
-    }
+	void insert(K key, V value)
+	{
+		sut[key] = value;
+	}
 
-    void remove(K key)
-    {
-        sut.erase(key);
-    }
+	void remove(K key)
+	{
+		sut.erase(key);
+	}
 };
