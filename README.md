@@ -1,6 +1,7 @@
 # SFMLFlashcards / TESTLY
 
 ##Benjamin Michaelis, Hugo Aponte, Zach Griswold, Blake Calvin
+##Github Repo: https://github.com/BenjaminMichaelis/sfmlFlashcards
 
 ## Directions
 You can add and delete flash cards from the menu, and you can also choose to play a match game. In Match, we'll associate your terms and definitions with a flashcard. You can click on the question card, drag it, and hover it over the corresponding answer card. Press E to go back to menu...(that works for every selection from the menu except add/delete card)
