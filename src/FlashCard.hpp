@@ -11,6 +11,10 @@ private:
     std::string A;
     bool opacity;
 
+    // for testing
+    bool testCorrectCollision;
+    bool testWrongCollision;
+
 public:
     FlashCard(std::string Q, std::string A)
     {
@@ -25,7 +29,12 @@ public:
         this->Q = Q;
         this->A = A;
         opacity = true;
+
+        // testing variables
+        testCorrectCollision = false;
+        testWrongCollision = false;
     }
+
     FlashCard()
     {
         cardQ = new sf::RectangleShape(sf::Vector2f(200.0f, 85.0f));
@@ -66,6 +75,16 @@ public:
     std::string getA()
     {
         return A;
+    }
+
+    bool getTestC()
+    {
+        return testCorrectCollision;
+    }
+
+    bool getTestW()
+    {
+        return testWrongCollision;
     }
 
     void setCardPos(char card, sf::Vector2f& pos)
@@ -158,7 +177,10 @@ public:
         sf::Vector2f delta(std::abs(cardQ->getPosition().x - cardA->getPosition().x), std::abs(cardQ->getPosition().y - cardA->getPosition().y));
         sf::Vector2f intersect(delta.x - (halfsize.x + halfsize.x), delta.y - (halfsize.y + halfsize.y));
         if ((intersect.x <= 0.0f && intersect.y <= 0.0f) && opacity == true)
+        {
+            testCorrectCollision = true;
             return true;
+        }
 
         return false;
     }
@@ -169,7 +191,11 @@ public:
         sf::Vector2f delta(std::abs(cardQ->getPosition().x - f.getCardA().getPosition().x), std::abs(cardQ->getPosition().y - f.getCardA().getPosition().y));
         sf::Vector2f intersect(delta.x - (halfsize.x + halfsize.x), delta.y - (halfsize.y + halfsize.y));
         if ((intersect.x <= 0.0f && intersect.y <= 0.0f) && (opacity == true && f.checkOpacity()))
+        {
+            testWrongCollision = true;
+
             return true;
+        }
 
         return false;
     }

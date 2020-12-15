@@ -1,7 +1,19 @@
+/*******************************************************************************************
+* Programmers: Hugo Aponte, Ben Michaelis, Zach Grizwold, Blake Calvin		               *
+* Class: CptS 223, Fall, 2020; 											                   *
+* Programming Assignment: PA6 - Testly FlashCards						                   *
+* Date: December 12th, 2020																   *
+* Description: This program creates a window that allows a user several options:           *
+*               Add FlashCard, Delete FlashCard, Match, Review, Directions, and Exit!      *
+*              We used a Hash and unordered_map, created our own FlashCard,                *
+*             TextBox, and TestGame classes to create this game and fulfill all            *
+*            assignment requirements. Match and Review are user-interaction based          *
+*           which mimic existing quizzing applications like quizlet.                       *
+********************************************************************************************/
+
 #include "FlashCard.hpp"
-#include "Hash.hpp"
 #include "Platform/Platform.hpp"
-#include "RedBlackTree.hpp"
+#include "TestGame.hpp"
 #include "Textbox.hpp"
 #include <iostream>
 #include <stdlib.h>
@@ -200,7 +212,11 @@ void matchGameLogistics(FlashCard& flashCard, sf::RenderWindow& window, sf::Text
         }
     }
 }
+/*////////////////////////////////////////////////////////
 
+                    MAIN PROGRAM
+
+/////////////////////////////////////////////////////////*/
 int main()
 {
     util::Platform platform;
@@ -244,7 +260,7 @@ int main()
     directions.setFillColor(sf::Color::White);
     directions.setOrigin(sf::Vector2f(directions.getCharacterSize() / 2, directions.getCharacterSize() / 2));
     directions.setPosition({ 93, 100 });
-directions.setString("You can add and delete flash cards from\n"
+    directions.setString("You can add and delete flash cards from\n"
                          "the menu, and you can also choose to play\n"
                          "a match game. In Match, we'll associate your\n"
                          "terms and definitions with a flashcard. You\n"
@@ -453,17 +469,11 @@ directions.setString("You can add and delete flash cards from\n"
          addC = false, match = false, deleteC = false, dir = false, firstRun = true, playAgainB = false, review = false, reviewQ = false, reviewA = true, fiveCardsAdded = false; // extra booleans to control the flow of the window relative to its internal relations
                                                                                                                                                                                   // (deleteC and dir not used yet, so they cause errors if not commented out)
     sf::Vector2f randomQP, randomAP;
-    FlashCard temp1, temp2, temp3, temp4, temp5;
+    FlashCard temp1;
     std::vector<std::string> questions;
 
-    // changed focuses:
-
-    // 1. need to implement review and exit menu options
-    // 2. need to implement delete card success message so the user knows it worked
-    // 3. expand match so user can decide to play again (maybe also add menu option to load terms and definitions from file)
-    // 3b. if we add a load option, we should have a box in add card thats like "save to file" or something
-
-    // after these things are improved, we can start thinking about aesthetics, we could also add an exit option in menu
+    // Testing Implementation
+    TestGame test { 1, temp1 };
 
     while (window.isOpen())
     {
@@ -997,6 +1007,15 @@ directions.setString("You can add and delete flash cards from\n"
 
         window.display();
     }
+    if (cardDeck.sut[0].getTestC())
+        test.testCorrectMatch(true);
+    else
+        std::cout << "TestCorrectMatch(): Inconclusive...";
+
+    if (cardDeck.sut[0].getTestW())
+        test.testWrongMatch(true);
+    else
+        std::cout << "TestCorrectMatch(): Inconclusive...";
 
     return 0;
 }
