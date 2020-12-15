@@ -1,3 +1,16 @@
+/*******************************************************************************************
+* Programmers: Hugo Aponte, Ben Michaelis, Zach Grizwold, Blake Calvin		               *
+* Class: CptS 223, Fall, 2020; 											                   *
+* Programming Assignment: PA6 - Testly FlashCards						                   *
+* Date: December 12th, 2020																   *
+* Description: This program creates a window that allows a user several options:           *
+*               Add FlashCard, Delete FlashCard, Match, Review, Directions, and Exit!      *
+*              We used a Hash and unordered_map, created our own FlashCard,                *
+*             TextBox, and TestGame classes to create this game and fulfill all            *
+*            assignment requirements. Match and Review are user-interaction based          *
+*           which mimic existing quizzing applications like quizlet.                       *
+********************************************************************************************/
+
 #include "FlashCard.hpp"
 #include "Platform/Platform.hpp"
 #include "RedBlackTree.hpp"
