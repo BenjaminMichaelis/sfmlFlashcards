@@ -1,0 +1,27 @@
+name: Ubuntu Make Build
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches: [master]
+    #allows for running at anytime from button
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    name: Build the project with makefile
+    runs-on: ubuntu-latest
+    steps:
+        - name: Display the path
+          run: echo $PATH
+          shell: bash
+        # step 1: checkout repository code inside the workspace directory of the runner
+        - name: Checkout the repository
+          uses: actions/checkout@v2
+        - name: Display the current directory
+          run: echo $PWD
+        - name: make
+          run: make makebuild
