@@ -21,6 +21,8 @@ jobs:
         # step 1: checkout repository code inside the workspace directory of the runner
         - name: Checkout the repository
           uses: actions/checkout@v2
+        - name: Install Linux Dependencies
+          run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
         - name: Display the current directory
           run: echo $PWD
         - name: make
