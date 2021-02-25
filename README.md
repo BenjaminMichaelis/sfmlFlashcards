@@ -1,4 +1,6 @@
 # SFMLFlashcards / TESTLY
+[![Ubuntu Bash Build](https://github.com/BenjaminMichaelis/sfmlFlashcards/actions/workflows/UbuntuBashBuild.yml/badge.svg?branch=master)](https://github.com/BenjaminMichaelis/sfmlFlashcards/actions/workflows/UbuntuBashBuild.yml)
+[![Ubuntu Make Build](https://github.com/BenjaminMichaelis/sfmlFlashcards/actions/workflows/UbuntuMakeBuild.yml/badge.svg?branch=master)](https://github.com/BenjaminMichaelis/sfmlFlashcards/actions/workflows/UbuntuMakeBuild.yml)
 
 #### Benjamin Michaelis, Hugo Aponte, Zach Griswold, Blake Calvin
 #### Github Repo: https://github.com/BenjaminMichaelis/sfmlFlashcards
